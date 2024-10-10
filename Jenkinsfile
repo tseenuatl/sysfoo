@@ -25,7 +25,7 @@ pipeline {
 			steps {
 				echo 'Artifact creation..'
 				sh 'mvn package -DskipTests'
-				archiveArtifacts artifacts: '**/target/*.jar, fingerprint:true
+				archiveArtifacts artifacts: '**/target/*.jar', fingerprint:true
 		}
 		}
 	}
