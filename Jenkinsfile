@@ -1,32 +1,34 @@
 pipeline {
 	agent any
 
-	stages {
-		stage( 'one') {
-			steps {
-				echo 'one'
-				sleep 5 
-		}
-		}
-		stage( 'two') {
-			steps {
-				echo 'two'
-				sleep 5
-		}
-		}
-		stage( 'three') {
-			steps {
-				echo 'three'
-				sleep 5
-		}
-		}
+	triggers { pollSCM ('H/2 * * * *') }
+
+	tools {
+		maven 'Maven 3.6.1'
 	}
 
-post {
-	always {
-		echo 'four post'
-     }
-   }
 
+	stages {
+		stage( 'Build') {
+			steps {
+				echo 'Building..'
+				sh 'mvn - worker/pom.xml compile'
+		}
+		}
+		stage( 'Test') {
+			steps {
+				echo 'Testing..'
+				sh 'mvn - worker/pom.xml test'
+		}
+		}
+		stage( 'Package') {
+			steps {
+				echo 'Artifact creation..'
+				sh 'mvn - worker/pom.xml package -DskipTests'
+				archiveArtifacts artifacts: '**/target/*.jar, fingerprint:true
+		}
+		}
+		Post {}
+	}
 }
 
