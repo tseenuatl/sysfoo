@@ -12,19 +12,19 @@ pipeline {
 		stage( 'Build') {
 			steps {
 				echo 'Building..'
-				sh 'mvn - worker/pom.xml compile'
+				sh 'mvn -e compile'
 		}
 		}
 		stage( 'Test') {
 			steps {
 				echo 'Testing..'
-				sh 'mvn - worker/pom.xml test'
+				sh 'mvn - test'
 		}
 		}
 		stage( 'Package') {
 			steps {
 				echo 'Artifact creation..'
-				sh 'mvn - worker/pom.xml package -DskipTests'
+				sh 'mvn package -DskipTests'
 				archiveArtifacts artifacts: '**/target/*.jar', fingerprint:true
 		}
 		}
